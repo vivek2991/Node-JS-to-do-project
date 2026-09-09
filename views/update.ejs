@@ -12,7 +12,7 @@
 
     <div class="container">
         <h1>Update Task</h1>
-        <form class="todo-form" action="/update" method="post">
+        <form class="todo-form" action="/update/<%= result._id %>" method="post">
             <input class="input" type="text" value="<%= result.title %>" name="title" placeholder="Enter Task Title">
             <br><br>
             <textarea class="input" name="description"><%= result.description %></textarea>

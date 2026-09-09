@@ -10,7 +10,7 @@ app.set('view engine', 'ejs')
 
 const dbName = "node-project"
 const collectionName = "todo"
-const url = "mongodb://localhost/27017"
+const url = "mongodb://localhost:27017"
 const client = new MongoClient(url)
 
 const connection = async () => {
@@ -24,7 +24,7 @@ app.get('/', async (req, resp) => {
     const db = await connection();
     const collection = db.collection(collectionName);
     const result = await collection.find().toArray();
-    resp.render("list", {result})
+    resp.render("list", { result })
 })
 
 app.get('/add', (req, resp) => {
@@ -53,7 +53,7 @@ app.post('/update', (req, resp) => {
 app.get('/delete/:id', async (req, resp) => {
     const db = await connection();
     const collection = db.collection(collectionName);
-    const result = collection.deleteOne({_id:new ObjectId(req.params.id)})
+    const result = collection.deleteOne({ _id: new ObjectId(req.params.id) })
     if (result) {
         resp.redirect('/')
     } else {
@@ -64,9 +64,27 @@ app.get('/delete/:id', async (req, resp) => {
 app.get('/update/:id', async (req, resp) => {
     const db = await connection();
     const collection = db.collection(collectionName);
-    const result = await collection.findOne({_id:new ObjectId(req.params.id)})
+    const result = await collection.findOne({ _id:new ObjectId(req.params.id) })
     if (result) {
-        resp.render('update', {result})
+        resp.render('update', { result })
+    } else {
+        resp.send('Some Error occured! Try again later.')
+    }
+})
+
+app.post('/update/:id', async (req, resp) => {
+    const db = await connection();
+    const collection = db.collection(collectionName);
+    const filter = { _id:new ObjectId(req.params.id) };
+    const updatedData = {
+        $set: {
+            title: req.body.title,
+            description: req.body.description
+        }
+    };
+    const result = await collection.updateOne(filter, updatedData)
+    if (result) {
+        resp.redirect('/')
     } else {
         resp.send('Some Error occured! Try again later.')
     }
