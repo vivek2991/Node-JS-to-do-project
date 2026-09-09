@@ -1,0 +1,19 @@
+{
+  "name": "todo-list-project",
+  "version": "1.0.0",
+  "description": "node js project",
+  "license": "ISC",
+  "author": "vivek patel",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "ejs": "^6.0.1",
+    "express": "^5.2.1",
+    "nodemon": "^3.1.14"
+  }
+}
