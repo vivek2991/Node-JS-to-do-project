@@ -61,5 +61,16 @@ app.get('/delete/:id', async (req, resp) => {
     }
 })
 
+app.get('/update/:id', async (req, resp) => {
+    const db = await connection();
+    const collection = db.collection(collectionName);
+    const result = await collection.findOne({_id:new ObjectId(req.params.id)})
+    if (result) {
+        resp.render('update', {result})
+    } else {
+        resp.send('Some Error occured! Try again later.')
+    }
+})
+
 
 app.listen(3200);
