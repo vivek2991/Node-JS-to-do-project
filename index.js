@@ -64,7 +64,7 @@ app.get('/delete/:id', async (req, resp) => {
 app.get('/update/:id', async (req, resp) => {
     const db = await connection();
     const collection = db.collection(collectionName);
-    const result = await collection.findOne({ _id:new ObjectId(req.params.id) })
+    const result = await collection.findOne({ _id: new ObjectId(req.params.id) })
     if (result) {
         resp.render('update', { result })
     } else {
@@ -75,7 +75,7 @@ app.get('/update/:id', async (req, resp) => {
 app.post('/update/:id', async (req, resp) => {
     const db = await connection();
     const collection = db.collection(collectionName);
-    const filter = { _id:new ObjectId(req.params.id) };
+    const filter = { _id: new ObjectId(req.params.id) };
     const updatedData = {
         $set: {
             title: req.body.title,
@@ -90,5 +90,28 @@ app.post('/update/:id', async (req, resp) => {
     }
 })
 
+// multi delete tasks
+app.post('/multi-delete', async (req, resp) => {
+    const db = await connection();
+    const collection = db.collection(collectionName);
+    //console.log(req.body.selectedTask);
+
+    let selectedTask = undefined;
+    if (Array.isArray(req.body.selectedTask)) {
+        selectedTask = req.body.selectedTask.map((id) => new ObjectId(id));
+    } else {
+        selectedTask = [new ObjectId(req.body.selectedTask)]
+    }
+    console.log(selectedTask);
+    
+    const result = await collection.deleteMany({ _id: { $in: selectedTask } })
+
+    if (result) {
+        resp.redirect('/')
+    } else {
+        resp.send('Some Error occured! Try again later.')
+    }
+    //resp.send("ok")
+})
 
 app.listen(3200);
